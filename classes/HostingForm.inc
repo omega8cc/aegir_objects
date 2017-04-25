@@ -92,12 +92,53 @@ abstract class HostingForm {
     form_error($this->form[$field], t($message));
   }
 
+  protected function isAField($field) {
+    $prefix = 'field_';
+    return substr($field, 0, strlen($prefix)) === $prefix;
+  }
+
   public function getFormStateValue($field, $index = 0) {
-    return $this->form_state['values'][$field][$this->language()][$index]['value'];
+    if ($this->isAField($field)) {
+      return $this->form_state['values'][$field][$this->language()][$index]['value'];
+    }
+    else {
+      return $this->form_state['values'][$field];
+    }
   }
 
   public function setFormStateValue($field, $value, $index = 0) {
-    $this->form_state['values'][$field][$this->language()][$index]['value'] = $value;
+    if ($this->isAField($field)) {
+      $this->form_state['values'][$field][$this->language()][$index]['value'] = $value;
+    }
+    else {
+      $this->form_state['values'][$field] = $value;
+    }
+  }
+
+  protected function moveFieldsIntoFieldset($fieldset, $fields) {
+    if (!isset($this->form[$fieldset])) {
+      $this->form[$fieldset] = [
+        '#type' => 'fieldset',
+      ];
+    }
+    foreach ($fields as $field) {
+      $this->form[$fieldset][$field] = $this->form[$field];
+      unset($this->form[$field]);
+    }
+  }
+
+  protected function makeFieldsetsIntoRadios($radio, $fieldsets) {
+    foreach ($fieldsets as $fieldset => $label) {
+      $this->form[$radio][$this->language()]['#options'][$fieldset] = $label;
+      $this->form[$fieldset]['#title'] = $label;
+      $this->form[$fieldset]['#collapsible'] = FALSE;
+      $this->form[$fieldset]['#weight'] = 10;
+      $this->form[$fieldset]['#states'] = [
+        'visible' => [
+          ':input[name="' . $radio . '[' . $this->language() . ']"]' => ['value' => $fieldset],
+        ],
+      ];
+    }
   }
 
 }

@@ -47,4 +47,13 @@ trait HostingFieldable {
     return $this->node->{$field}[$this->node->language][0]['value'] = $value;
   }
 
+  /**
+   * Set the value of a property.
+   */
+  public function setProperty($property, $value) {
+    return $this->node->$property = $value;
+  }
+
+
+
 }
