@@ -22,7 +22,7 @@ abstract class HostingForm {
    * callbacks. These get passed by reference, so that any changes made need
    * not be returned back to the calling function.
    */
-  public function __construct(&$form, &$form_state, $node = FALSE) {
+  public function __construct(&$form = [], &$form_state = [], $node = FALSE) {
     $this->form =& $form;
     $this->form_state =& $form_state;
     if ($node) {
@@ -30,6 +30,9 @@ abstract class HostingForm {
     }
     elseif (isset($form['#node'])) {
       $this->node = $form['#node'];
+    }
+    elseif (isset($form_state['node'])) {
+      $this->node = $form_state['node'];
     }
     elseif (isset($form_state['build_info']['args'][0])) {
       $this->node = $form_state['build_info']['args'][0];
@@ -88,6 +91,13 @@ abstract class HostingForm {
     $this->form['#validate'][] = $callback;
   }
 
+  /**
+   * Register a form submit handler.
+   */
+  public function addSubmitHandler($callback) {
+    $this->form['#submit'][] = $callback;
+  }
+
   public function error($field, $message) {
     form_error($this->form[$field], t($message));
   }
@@ -113,6 +123,10 @@ abstract class HostingForm {
     else {
       $this->form_state['values'][$field] = $value;
     }
+  }
+
+  protected function setFormDefaultValue($field, $value) {
+    $this->form[$field][$this->language()]['#default_value'] = $value;
   }
 
   protected function moveFieldsIntoFieldset($fieldset, $fields) {
