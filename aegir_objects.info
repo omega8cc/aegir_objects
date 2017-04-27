@@ -3,6 +3,7 @@ description = API helpers to simplify interacting with Drupal 7 in an object-ori
 core = 7.x
 package = Aegir
 
+dependencies[] = hosting
 files[] = classes/HostingForm.inc
 files[] = classes/HostingNode.inc
 files[] = traits/HostingFieldable.inc
