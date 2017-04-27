@@ -9,16 +9,12 @@ class Provision_ShellCommand {
   protected $context_properties = [];
 
   /**
-   * Initialize properties from the platform context.
+   * Initialize properties from the current Aegir context.
    */
-  public function initialize() {
+  public function __construct() {
     foreach ($this->context_properties as $property) {
       $this->setProperty($property);
     }
-    if (drush_get_error() == DRUSH_FRAMEWORK_ERROR) {
-      return FALSE;
-    }
-    return TRUE;
   }
 
   protected function setProperty($property) {
