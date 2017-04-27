@@ -35,28 +35,32 @@ class Provision_ShellCommand {
   }
 
   protected function log($message, $type) {
-    drush_log($message, $type);
+    return drush_log($message, $type);
   }
 
   protected function notice($message) {
-    $this->log($message, 'notice');
+    return $this->log($message, 'notice');
   }
 
   protected function warning($message) {
-    $this->log($message, 'warning');
+    return $this->log($message, 'warning');
   }
 
   protected function success($message) {
-    $this->log($message, 'success');
+    return $this->log($message, 'success');
   }
 
   protected function pathExists($path) {
     if (!empty($path)) {
       return provision_file()->exists($path)->status();
     }
+    $this->warning(dt('No path provided.'));
     return FALSE;
   }
 
+  /**
+   * Run a command in a subshell, and post the output once complete.
+   */
   protected function runCommand($command) {
     $this->notice("Running `$command`");
     if (drush_shell_exec($command)) {
@@ -75,6 +79,9 @@ class Provision_ShellCommand {
     }
   }
 
+  /**
+   * Run a command in a subprocess, and stream the output.
+   */
   protected function execCommand($command) {
     $this->notice("Executing: `$command`");
     $descriptorspec = [
