@@ -4,6 +4,8 @@ core = 7.x
 package = Aegir
 
 dependencies[] = hosting
+files[] = classes/HostingFieldCleanup.inc
 files[] = classes/HostingForm.inc
 files[] = classes/HostingNode.inc
 files[] = traits/HostingFieldable.inc
+
