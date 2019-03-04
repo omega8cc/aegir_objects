@@ -13,7 +13,7 @@ trait HostingFieldable {
   }
 
   public function getFieldValueType($field, $type) {
-    if (isset($this->node->{$field})) {
+    if (isset($this->node->{$field}) && $this->node->{$field}) {
       if (isset($this->node->{$field}[$this->node->language])) {
         return $this->node->{$field}[$this->node->language][0][$type];
       }
