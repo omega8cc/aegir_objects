@@ -35,7 +35,8 @@ class Provision_ShellCommand {
   }
 
   protected function log($message, $type) {
-    return drush_log($message, $type);
+    drush_log($message, $type);
+    return true;
   }
 
   protected function notice($message) {
